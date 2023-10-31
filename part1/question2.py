@@ -15,7 +15,11 @@
 # it. As always, there is a test suite that checks the result. It is in 
 # `question2_test.py.`
 
-swapper = None
+#This function i made, takes a tuple with two items and returns the same tuple with the items swapped
+def swapper(tuple):
+  l, o = tuple
+  return (o, l)
 
+#This receives a list of tuples and runs the previous function to swap it and map it into a list
 def run_swapper(list_of_tuples):
   return list(map(swapper, list_of_tuples))
