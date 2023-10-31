@@ -1,5 +1,5 @@
 import pets_db
-
+import sqlite3
 ################################################################################
 #     ____                          __     _                          __ __
 #    / __ \  __  __  ___    _____  / /_   (_)  ____    ____          / // /
@@ -22,11 +22,21 @@ import pets_db
 # Write SQL to select the pets that are owned by nobody.
 # The output should be a list of tuples in the format: (<pet name>, <species>, <age>)
 
+conn = sqlite3.connect('quiz_pets')
+cursor = conn.cursor()
+
 sql_pets_owned_by_nobody = """
-
-Your SQL here.
-
+SELECT animals.name, animals.species, animals.age
+FROM animals
+LEFT JOIN people_animals ON animals.animal_id = people_animals.pet_id
+WHERE people_animals.owner_id IS NULL
 """
+cursor.execute(sql_pets_owned_by_nobody)
+
+resultado = cursor.fetchall()
+
+for row in resultado:
+    print(row)
 
 # Part 4.B:
 # Write SQL to select how the number of pets are older than their owners. 
