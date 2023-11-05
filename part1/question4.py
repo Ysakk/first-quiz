@@ -26,17 +26,13 @@ conn = sqlite3.connect('quiz_pets')
 cursor = conn.cursor()
 
 sql_pets_owned_by_nobody = """
+
 SELECT animals.name, animals.species, animals.age
 FROM animals
 LEFT JOIN people_animals ON animals.animal_id = people_animals.pet_id
 WHERE people_animals.owner_id IS NULL
+
 """
-cursor.execute(sql_pets_owned_by_nobody)
-
-resultado = cursor.fetchall()
-
-for row in resultado:
-    print(row)
 
 # Part 4.B:
 # Write SQL to select how the number of pets are older than their owners. 
@@ -44,15 +40,32 @@ for row in resultado:
 
 sql_pets_older_than_owner = """
 
-Your SQL here.
+SELECT COUNT(*) AS num_pets_older_than_owners
+FROM animals AS A
+JOIN people_animals AS PA ON A.animal_id = PA.pet_id
+JOIN people AS P ON PA.owner_id = P.person_id
+WHERE A.age > P.age;
 
 """
+
+#result = conn.execute(sql_pets_older_than_owner).fetchone()
+#sql_pets_older_than_owner = result[0]
 
 # Part 4.C: BONUS CHALLENGE! 
 # Write SQL to select the pets that are owned by Bessie and nobody else.
 # The output should be a list of tuples in the format: (<person name>, <pet name>, <species>)
 sql_only_owned_by_bessie = """ 
 
-Your SQL here.
+SELECT P.name AS person_name, A.name AS pet_name, A.species
+FROM animals AS A
+JOIN people_animals AS PA ON A.animal_id = PA.pet_id
+JOIN people AS P ON PA.owner_id = P.person_id
+WHERE P.name = 'bessie'
+AND NOT EXISTS (
+    SELECT 1
+    FROM people_animals AS PA2
+    WHERE PA2.pet_id = PA.pet_id
+    AND PA2.owner_id <> PA.owner_id
+);
 
 """
